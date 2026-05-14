@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Online Shop — sbx-02</title>
+<style>
+  /* === Design tokens ============================================ */
+  :root {
+    /* Neutral palette — Slate */
+    --ink-900: #0f172a;
+    --ink-700: #334155;
+    --ink-500: #64748b;
+    --ink-300: #cbd5e1;
+    --ink-200: #e2e8f0;
+    --ink-100: #f1f5f9;
+    --ink-50:  #f8fafc;
+    --bg:      #ffffff;
+    /* Single accent — Deep teal */
+    --accent-700: #0f766e;
+    --accent-600: #0d9488;
+    --accent-50:  #f0fdfa;
+    /* Status */
+    --ok-700:   #047857;
+    --ok-50:    #ecfdf5;
+    --warn-700: #b45309;
+    --warn-50:  #fffbeb;
+    /* Type scale */
+    --font-sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, system-ui, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, "JetBrains Mono", Menlo, monospace;
+    /* Elevation */
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+    --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+    --radius:    8px;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    background: var(--ink-50);
+    color: var(--ink-900);
+    line-height: 1.55;
+    font-size: 15px;
+  }
+
+  /* === Top bar — minimal, fixed-feel branding ==================== */
+  .topbar {
+    background: var(--bg);
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .topbar-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+    color: var(--ink-900);
+  }
+  .brand .mark {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: var(--accent-700);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+  }
+  .topbar nav {
+    display: flex;
+    gap: 22px;
+    font-size: 0.92rem;
+    color: var(--ink-500);
+  }
+  .topbar nav a {
+    color: var(--ink-500);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .topbar nav a:hover { color: var(--ink-900); }
+
+  /* === Hero — restrained, white ================================== */
+  .hero {
+    background: var(--bg);
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .hero-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 56px 32px 48px;
+  }
+  .hero h1 {
+    margin: 0 0 12px;
+    font-size: 2.1rem;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    font-weight: 700;
+    color: var(--ink-900);
+    max-width: 640px;
+  }
+  .hero p {
+    margin: 0;
+    font-size: 1.02rem;
+    color: var(--ink-500);
+    max-width: 580px;
+  }
+
+  /* === Main content ============================================== */
+  main {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 36px 32px 64px;
+  }
+
+  /* Tech notice — pre-formatted-looking, low chrome */
+  .notice {
+    background: var(--bg);
+    border: 1px solid var(--ink-200);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 32px;
+    font-size: 0.88rem;
+    color: var(--ink-500);
+    line-height: 1.65;
+  }
+  .notice strong {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--ink-700);
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .notice code {
+    background: var(--ink-100);
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: var(--ink-700);
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+  }
+
+  /* Section header */
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin: 0 0 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .section-head h2 {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--ink-900);
+    letter-spacing: -0.01em;
+  }
+  .section-head .count {
+    font-size: 0.82rem;
+    color: var(--ink-500);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* === Product grid ============================================= */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+
+  .card {
+    background: var(--bg);
+    border: 1px solid var(--ink-200);
+    border-radius: var(--radius);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .card:hover {
+    border-color: var(--ink-300);
+    box-shadow: var(--shadow-md);
+  }
+
+  .card-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 4px;
+  }
+  .card .icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    background: var(--ink-100);
+    display: grid;
+    place-items: center;
+    font-size: 1.4rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .card .id {
+    font-size: 0.7rem;
+    color: var(--ink-500);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+  }
+  .card h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ink-900);
+    line-height: 1.35;
+    letter-spacing: -0.005em;
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid var(--ink-100);
+  }
+  .card .price {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--ink-900);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+  .card .price-currency {
+    font-size: 0.85em;
+    font-weight: 600;
+    color: var(--ink-500);
+    margin-right: 1px;
+  }
+
+  .stock {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 999px;
+    color: var(--ok-700);
+    background: var(--ok-50);
+    font-variant-numeric: tabular-nums;
+  }
+  .stock::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ok-700);
+  }
+  .stock.low {
+    color: var(--warn-700);
+    background: var(--warn-50);
+  }
+  .stock.low::before { background: var(--warn-700); }
+
+  /* === Footer =================================================== */
+  footer {
+    border-top: 1px solid var(--ink-200);
+    background: var(--bg);
+    margin-top: 32px;
+  }
+  .footer-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    font-size: 0.84rem;
+    color: var(--ink-500);
+  }
+  .footer-inner code {
+    font-family: var(--font-mono);
+    font-size: 0.95em;
+    color: var(--ink-700);
+  }
+  .footer-inner .api-links {
+    display: flex;
+    gap: 18px;
+  }
+  .footer-inner a {
+    color: var(--ink-500);
+    text-decoration: none;
+  }
+  .footer-inner a:hover { color: var(--accent-700); }
+
+  /* Responsive tweaks */
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 1.7rem; }
+    .topbar-inner, .hero-inner, main, .footer-inner { padding-left: 20px; padding-right: 20px; }
+    .footer-inner { flex-direction: column; align-items: flex-start; gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="mark">OS</span>
+      <span>Online Shop</span>
+    </div>
+    <nav>
+      <a href="/shop/">Catalog</a>
+      <a href="/shop/api/products">API</a>
+      <a href="/shop/healthz">Status</a>
+    </nav>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="hero-inner">
+    <h1>Curated coffee equipment for the discerning brewer.</h1>
+    <p>Direct-trade beans, hand-thrown ceramics, and durable brewing tools — sourced from independent makers and shipped from our regional warehouse.</p>
+  </div>
+</section>
+
+<main>
+  <div class="notice">
+    <strong>Reference workload</strong>
+    Served by a single-binary Go service in namespace <code>online-shop</code>, exposed via <code>gateway/internal-gateway</code> at path prefix <code>/shop/</code>. Catalog at <code>/shop/api/products</code>, liveness at <code>/shop/healthz</code>.
+  </div>
+
+  <div class="section-head">
+    <h2>Catalog</h2>
+    <span class="count">{{ len . }} products</span>
+  </div>
+
+  <div class="grid">
+    {{- range . }}
+    <article class="card">
+      <div class="card-head">
+        <span class="icon">{{ .Emoji }}</span>
+        <span class="id">{{ .ID }}</span>
+      </div>
+      <h3>{{ .Name }}</h3>
+      <div class="card-meta">
+        <div class="price"><span class="price-currency">£</span>{{ gbp .Price }}</div>
+        <span class="stock {{ if lt .Stock 10 }}low{{ end }}">{{ .Stock }} in stock</span>
+      </div>
+    </article>
+    {{- end }}
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <span>© Online Shop · sbx-02 reference deployment</span>
+    <span class="api-links">
+      <a href="/shop/api/products">API</a>
+      <a href="/shop/healthz">Health</a>
+    </span>
+  </div>
+</footer>
+
+</body>
+</html>

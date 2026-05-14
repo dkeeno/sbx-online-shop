@@ -1,0 +1,34 @@
+# Compiled Go binaries (we never commit them — built only inside CI/Docker)
+/server
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test artefacts
+*.test
+*.out
+coverage.txt
+*.prof
+
+# Vendored deps (we use std-lib only — no go.sum needed at the moment)
+/vendor/
+
+# IDE / OS junk
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local env / creds (never commit)
+.env
+.env.*
+*.pem
+*.key
+
+# WIF / GCP credential files written by CI scripts (defensive — these
+# only land in CI workspaces, not on dev machines, but listed here so a
+# stray local download doesn't get committed)
+.gcp-creds.json
+.oidc-token

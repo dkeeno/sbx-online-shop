@@ -1,0 +1,36 @@
+# =============================================================================
+# build.yml — calls the reusable build-and-push workflow from sbx-ci-templates
+# =============================================================================
+# All the logic is in dkeeno/sbx-ci-templates/.github/workflows/build-and-push.yml.
+# Pinned by tag (@v1.1.0) — never @main. Bump deliberately.
+
+name: build
+
+on:
+  pull_request:
+    paths:
+      - '**.go'
+      - 'go.mod'
+      - 'Dockerfile'
+      - 'index.html'
+      - '.github/workflows/**'
+  push:
+    branches: [main]
+    paths:
+      - '**.go'
+      - 'go.mod'
+      - 'Dockerfile'
+      - 'index.html'
+      - '.github/workflows/**'
+
+permissions:
+  id-token: write   # OIDC token for AWS auth
+  contents: read
+
+jobs:
+  build:
+    uses: dkeeno/sbx-ci-templates/.github/workflows/build-and-push.yml@v1.1.0
+    with:
+      image_name: online-shop
+    secrets:
+      aws_role_arn: ${{ secrets.AWS_ROLE_ARN }}
