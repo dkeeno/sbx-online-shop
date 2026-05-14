@@ -1,8 +1,9 @@
 # =============================================================================
 # build.yml — calls the reusable build-and-push workflow from sbx-ci-templates
 # =============================================================================
-# All the logic is in dkeeno/sbx-ci-templates/.github/workflows/build-and-push.yml.
-# Pinned by tag (@v1.1.0) — never @main. Bump deliberately.
+# Inputs (image_name, aws_region) sourced from repo Variables managed by
+# Terraform (github-terraform-aws/bootstrap). Single source of truth, no
+# hardcoded values here.
 
 name: build
 
@@ -31,6 +32,7 @@ jobs:
   build:
     uses: dkeeno/sbx-ci-templates/.github/workflows/build-and-push.yml@v1.1.0
     with:
-      image_name: online-shop
+      image_name: ${{ vars.IMAGE_NAME }}
+      aws_region: ${{ vars.AWS_REGION }}
     secrets:
       aws_role_arn: ${{ secrets.AWS_ROLE_ARN }}
