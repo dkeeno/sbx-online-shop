@@ -69,10 +69,14 @@ func withLogging(next http.Handler) http.Handler {
 	})
 }
 
-// handleHealthz is the lightweight probe endpoint. Plain "ok" body, 200.
+// handleHealthz is the lightweight probe endpoint. Returns "ok v2" with
+// 200 status. K8s default httpGet probes only check status code (not body),
+// so this remains a valid liveness/readiness response. The body suffix is
+// a hands-off-loop demo marker — flip it to verify CI → ECR → Image Updater
+// → ArgoCD → pod-roll without changing any other behavior.
 func handleHealthz(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	fmt.Fprintln(w, "ok")
+	fmt.Fprintln(w, "ok v2")
 }
 
 // handleListProducts returns the full product catalog as JSON.
